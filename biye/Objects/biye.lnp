@@ -1,0 +1,8 @@
+".\Objects\ad0832.obj",
+".\Objects\delay.obj",
+".\Objects\dht11.obj",
+".\Objects\uart.obj",
+".\Objects\lcd.obj",
+".\Objects\main.obj" 
+TO ".\Objects\biye" 
+PRINT(".\Listings\biye.m51")

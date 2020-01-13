@@ -1,0 +1,82 @@
+C51 COMPILER V9.00   AD0832                                                                01/13/2020 20:22:41 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE AD0832
+OBJECT MODULE PLACED IN .\Objects\ad0832.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE Code\AD0832\ad0832.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Code\AD0832
+                    -;.\Code\Uart;.\Code\Delay;.\Code\DHT11;.\Code\Lcd) DEBUG OBJECTEXTEND PRINT(.\Listings\ad0832.lst) TABS(2) OBJECT(.\Obje
+                    -cts\ad0832.obj)
+
+line level    source
+
+   1          #include "ad0832.h"
+   2          #include "delay.h"
+   3          #include "dht11.h"
+   4          
+   5          uchar ADC0832(void) //把模拟电压值转换成8位二进制数并返回 
+   6          { 
+   7   1      
+   8   1        uchar i,data_c; 
+   9   1        data_c=0; 
+  10   1        ADC_CS=0; 
+  11   1        ADC_CLK=1; 
+  12   1        ADC_DO=0;//片选，DO为高阻态 
+  13   1        //ADC_DI=0; //先拉低
+  14   1      
+  15   1        for(i=0;i<10;i++)    
+  16   1        {;}
+  17   1      
+  18   1        ADC_CLK=0; 
+  19   1        delay_us(2); 
+  20   1        ADC_CLK=1; 
+  21   1        ADC_DI=1; //启始位  
+  22   1        delay_us(2); 
+  23   1      
+  24   1        ADC_CLK=0; //第一个脉冲下降沿，DI=1为起始位 
+  25   1        delay_us(2); 
+  26   1        ADC_CLK=1; 
+  27   1        ADC_DI=1;   //1 
+  28   1        delay_us(2); 
+  29   1      
+  30   1        ADC_CLK=0;  //第二个脉冲下降沿，DI=1;
+  31   1        delay_us(2); 
+  32   1        ADC_DI=1;  //1 若为0则选择CH0 
+  33   1        ADC_CLK=1; 
+  34   1        delay_us(2); 
+  35   1      
+  36   1        ADC_CLK=0; //第三个脉冲下降沿，DI=1，选择 ADC0832 的CH1(1 1) 
+  37   1        delay_us(2); 
+  38   1        ADC_DI=1;   //已不关心 
+  39   1        ADC_DO=1; //高阻 
+  40   1        ADC_CLK=1; 
+  41   1        delay_us(2); 
+  42   1      
+  43   1        for (i=0; i<8; i++)  
+  44   1        { 
+  45   2        ADC_CLK=0; //第四个开始读数据 
+  46   2        delay_us(2);   
+  47   2        data_c=(data_c<<1)|ADC_DO;//在每个脉冲的下降沿DO输出一位数据，最终ch为8位二进制数
+             - 
+  48   2        ADC_CLK=1; 
+  49   2        delay_us(2);   
+  50   2        } 
+  51   1      
+  52   1        ADC_CS=1;//取消片选，一个转换周期结束 
+C51 COMPILER V9.00   AD0832                                                                01/13/2020 20:22:41 PAGE 2   
+
+  53   1        return(data_c);//把转换结果返回 
+  54   1       }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    143    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       2
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

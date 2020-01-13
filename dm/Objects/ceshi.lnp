@@ -1,0 +1,5 @@
+".\Objects\main.obj",
+".\Objects\uart.obj",
+".\Objects\AD0832.obj" 
+TO ".\Objects\ceshi" 
+PRINT(".\Listings\ceshi.m51")
